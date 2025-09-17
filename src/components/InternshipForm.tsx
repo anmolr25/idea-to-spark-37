@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Upload, ArrowLeft, Zap, BookOpen, MapPin, Briefcase, User } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { EnhancedResumeParser } from '@/utils/resumeParser';
+import { InternshipRecommendationEngine } from '@/data/internshipDatabase';
 
 interface FormData {
   education: string;
@@ -93,159 +95,35 @@ export const InternshipForm = ({ onBack }: InternshipFormProps) => {
 
     setIsUploading(true);
     
-    // Simulate advanced resume parsing
-    setTimeout(() => {
-      // Enhanced parsing logic that recognizes more skills
-      const detectedSkills = [];
-      const fileName = file.name.toLowerCase();
-      
-      // Check for cybersecurity-related keywords (simulated)
-      if (fileName.includes('cyber') || fileName.includes('security') || Math.random() > 0.7) {
-        detectedSkills.push('cybersecurity');
-      }
-      
-      // Add programming if it's a tech resume
-      if (Math.random() > 0.4) {
-        detectedSkills.push('programming');
-      }
-      
-      // Add communication (common skill)
-      detectedSkills.push('communication');
-      
-      // Add one more random skill based on common resume content
-      const commonSkills = ['data', 'design', 'marketing', 'leadership', 'research'];
-      detectedSkills.push(commonSkills[Math.floor(Math.random() * commonSkills.length)]);
+    try {
+      // Use enhanced resume parser
+      const parsedData = await EnhancedResumeParser.parseResumeFile(file);
       
       setFormData({
-        education: 'ug',
-        skills: detectedSkills,
-        sector: detectedSkills.includes('cybersecurity') ? 'technology' : 'technology',
-        state: 'Gujarat', // Default to user's likely location
-        district: 'Ahmedabad'
+        education: parsedData.education,
+        skills: parsedData.skills,
+        sector: parsedData.sector,
+        state: parsedData.location || 'Gujarat',
+        district: parsedData.location === 'Gujarat' ? 'Ahmedabad' : 'Select District'
       });
       setStep(4);
       setIsUploading(false);
       toast({
         title: "Resume processed successfully!",
-        description: "We've extracted your information and skills including cybersecurity expertise.",
+        description: `We've extracted your information and identified ${parsedData.skills.length} relevant skills.`,
       });
-    }, 2000);
+    } catch (error) {
+      setIsUploading(false);
+      toast({
+        title: "Error processing resume",
+        description: "Please try uploading again or fill the form manually.",
+        variant: "destructive"
+      });
+    }
   };
 
   const generateRecommendations = (formData: FormData) => {
-    const jobDatabase = [
-      // Cybersecurity Jobs
-      {
-        title: 'Cybersecurity Analyst Intern',
-        company: 'SecureNet Solutions',
-        sector: 'technology',
-        skills: ['cybersecurity', 'communication'],
-        stipend: '₹25,000',
-        duration: '6 months'
-      },
-      {
-        title: 'Information Security Intern',
-        company: 'CyberGuard India',
-        sector: 'technology', 
-        skills: ['cybersecurity', 'research'],
-        stipend: '₹22,000',
-        duration: '4 months'
-      },
-      // Programming Jobs
-      {
-        title: 'Software Development Intern',
-        company: 'Tech Solutions Pvt Ltd',
-        sector: 'technology',
-        skills: ['programming', 'communication'],
-        stipend: '₹18,000',
-        duration: '6 months'
-      },
-      {
-        title: 'Full Stack Developer Intern',
-        company: 'Innovation Labs',
-        sector: 'technology',
-        skills: ['programming', 'design'],
-        stipend: '₹20,000',
-        duration: '5 months'
-      },
-      // Data Analysis Jobs
-      {
-        title: 'Data Analyst Intern',
-        company: 'Analytics Corp',
-        sector: 'finance',
-        skills: ['data', 'communication'],
-        stipend: '₹16,000',
-        duration: '4 months'
-      },
-      {
-        title: 'Business Intelligence Intern',
-        company: 'DataWise Solutions',
-        sector: 'technology',
-        skills: ['data', 'research'],
-        stipend: '₹19,000',
-        duration: '6 months'
-      },
-      // Design Jobs
-      {
-        title: 'UI/UX Design Intern',
-        company: 'Creative Studio',
-        sector: 'marketing',
-        skills: ['design', 'communication'],
-        stipend: '₹14,000',
-        duration: '4 months'
-      },
-      {
-        title: 'Graphic Designer Intern',
-        company: 'Brand Builders',
-        sector: 'marketing',
-        skills: ['design', 'marketing'],
-        stipend: '₹12,000',
-        duration: '3 months'
-      },
-      // Marketing Jobs
-      {
-        title: 'Digital Marketing Intern',
-        company: 'Marketing Gurus',
-        sector: 'marketing',
-        skills: ['marketing', 'communication'],
-        stipend: '₹13,000',
-        duration: '4 months'
-      },
-      {
-        title: 'Content Marketing Intern',
-        company: 'Content Creators Inc',
-        sector: 'marketing',
-        skills: ['marketing', 'writing'],
-        stipend: '₹11,000',
-        duration: '3 months'
-      }
-    ];
-
-    // Filter jobs based on user's skills and sector
-    const matchingJobs = jobDatabase.filter(job => {
-      const skillMatch = job.skills.some(skill => formData.skills.includes(skill));
-      const sectorMatch = job.sector === formData.sector;
-      return skillMatch || sectorMatch;
-    });
-
-    // Get location info
-    const locationInfo = getLocationInfo(formData.state, formData.district);
-
-    // Sort by relevance and take top 3-5
-    const recommendations = matchingJobs.slice(0, 5).map((job, index) => {
-      const skillOverlap = job.skills.filter(skill => formData.skills.includes(skill)).length;
-      const match = Math.min(95, 70 + (skillOverlap * 10) + Math.floor(Math.random() * 15));
-      
-      return {
-        id: index + 1,
-        ...job,
-        location: locationInfo.city,
-        match: match,
-        skills: job.skills.map(skill => skillOptions.find(s => s.id === skill)?.label || skill)
-      };
-    });
-
-    return recommendations;
+    return InternshipRecommendationEngine.generateRecommendations(formData);
   };
 
   const getLocationInfo = (state: string, district: string) => {
@@ -492,6 +370,30 @@ export const InternshipForm = ({ onBack }: InternshipFormProps) => {
                           <SelectItem value="Central Delhi">Central Delhi</SelectItem>
                           <SelectItem value="North Delhi">North Delhi</SelectItem>
                           <SelectItem value="South Delhi">South Delhi</SelectItem>
+                        </>
+                      )}
+                      {formData.state === 'Punjab' && (
+                        <>
+                          <SelectItem value="Ludhiana">Ludhiana</SelectItem>
+                          <SelectItem value="Amritsar">Amritsar</SelectItem>
+                          <SelectItem value="Jalandhar">Jalandhar</SelectItem>
+                          <SelectItem value="Patiala">Patiala</SelectItem>
+                        </>
+                      )}
+                      {formData.state === 'Rajasthan' && (
+                        <>
+                          <SelectItem value="Jaipur">Jaipur</SelectItem>
+                          <SelectItem value="Jodhpur">Jodhpur</SelectItem>
+                          <SelectItem value="Udaipur">Udaipur</SelectItem>
+                          <SelectItem value="Kota">Kota</SelectItem>
+                        </>
+                      )}
+                      {formData.state === 'Kerala' && (
+                        <>
+                          <SelectItem value="Thiruvananthapuram">Thiruvananthapuram</SelectItem>
+                          <SelectItem value="Kochi">Kochi</SelectItem>
+                          <SelectItem value="Kozhikode">Kozhikode</SelectItem>
+                          <SelectItem value="Thrissur">Thrissur</SelectItem>
                         </>
                       )}
                       {!['Gujarat', 'Karnataka', 'Maharashtra', 'Tamil Nadu', 'Delhi'].includes(formData.state) && (
