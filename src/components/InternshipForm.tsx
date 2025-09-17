@@ -39,6 +39,7 @@ export const InternshipForm = ({ onBack }: InternshipFormProps) => {
 
   const skillOptions = [
     { id: 'programming', label: 'Programming', icon: '💻' },
+    { id: 'cybersecurity', label: 'Cybersecurity', icon: '🔐' },
     { id: 'design', label: 'Design', icon: '🎨' },
     { id: 'marketing', label: 'Marketing', icon: '📢' },
     { id: 'writing', label: 'Writing', icon: '✍️' },
@@ -49,7 +50,10 @@ export const InternshipForm = ({ onBack }: InternshipFormProps) => {
     { id: 'finance', label: 'Finance', icon: '💰' },
     { id: 'engineering', label: 'Engineering', icon: '⚙️' },
     { id: 'healthcare', label: 'Healthcare', icon: '🏥' },
-    { id: 'education', label: 'Teaching', icon: '📚' }
+    { id: 'education', label: 'Teaching', icon: '📚' },
+    { id: 'research', label: 'Research', icon: '🔬' },
+    { id: 'operations', label: 'Operations', icon: '⚡' },
+    { id: 'hr', label: 'Human Resources', icon: '👨‍💼' }
   ];
 
   const sectorOptions = [
@@ -67,9 +71,9 @@ export const InternshipForm = ({ onBack }: InternshipFormProps) => {
 
   const stateOptions = [
     'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
-    'Delhi', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand',
-    'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur',
-    'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan',
+    'Delhi', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jammu and Kashmir',
+    'Jharkhand', 'Karnataka', 'Kerala', 'Ladakh', 'Madhya Pradesh', 'Maharashtra', 
+    'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan',
     'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh',
     'Uttarakhand', 'West Bengal'
   ];
@@ -89,64 +93,187 @@ export const InternshipForm = ({ onBack }: InternshipFormProps) => {
 
     setIsUploading(true);
     
-    // Simulate resume parsing
+    // Simulate advanced resume parsing
     setTimeout(() => {
+      // Enhanced parsing logic that recognizes more skills
+      const detectedSkills = [];
+      const fileName = file.name.toLowerCase();
+      
+      // Check for cybersecurity-related keywords (simulated)
+      if (fileName.includes('cyber') || fileName.includes('security') || Math.random() > 0.7) {
+        detectedSkills.push('cybersecurity');
+      }
+      
+      // Add programming if it's a tech resume
+      if (Math.random() > 0.4) {
+        detectedSkills.push('programming');
+      }
+      
+      // Add communication (common skill)
+      detectedSkills.push('communication');
+      
+      // Add one more random skill based on common resume content
+      const commonSkills = ['data', 'design', 'marketing', 'leadership', 'research'];
+      detectedSkills.push(commonSkills[Math.floor(Math.random() * commonSkills.length)]);
+      
       setFormData({
-        education: 'UG',
-        skills: ['programming', 'communication', 'data'],
-        sector: 'technology',
-        state: 'Karnataka',
-        district: 'Bengaluru Urban'
+        education: 'ug',
+        skills: detectedSkills,
+        sector: detectedSkills.includes('cybersecurity') ? 'technology' : 'technology',
+        state: 'Gujarat', // Default to user's likely location
+        district: 'Ahmedabad'
       });
       setStep(4);
       setIsUploading(false);
       toast({
         title: "Resume processed successfully!",
-        description: "We've extracted your information and filled the form.",
+        description: "We've extracted your information and skills including cybersecurity expertise.",
       });
     }, 2000);
   };
 
+  const generateRecommendations = (formData: FormData) => {
+    const jobDatabase = [
+      // Cybersecurity Jobs
+      {
+        title: 'Cybersecurity Analyst Intern',
+        company: 'SecureNet Solutions',
+        sector: 'technology',
+        skills: ['cybersecurity', 'communication'],
+        stipend: '₹25,000',
+        duration: '6 months'
+      },
+      {
+        title: 'Information Security Intern',
+        company: 'CyberGuard India',
+        sector: 'technology', 
+        skills: ['cybersecurity', 'research'],
+        stipend: '₹22,000',
+        duration: '4 months'
+      },
+      // Programming Jobs
+      {
+        title: 'Software Development Intern',
+        company: 'Tech Solutions Pvt Ltd',
+        sector: 'technology',
+        skills: ['programming', 'communication'],
+        stipend: '₹18,000',
+        duration: '6 months'
+      },
+      {
+        title: 'Full Stack Developer Intern',
+        company: 'Innovation Labs',
+        sector: 'technology',
+        skills: ['programming', 'design'],
+        stipend: '₹20,000',
+        duration: '5 months'
+      },
+      // Data Analysis Jobs
+      {
+        title: 'Data Analyst Intern',
+        company: 'Analytics Corp',
+        sector: 'finance',
+        skills: ['data', 'communication'],
+        stipend: '₹16,000',
+        duration: '4 months'
+      },
+      {
+        title: 'Business Intelligence Intern',
+        company: 'DataWise Solutions',
+        sector: 'technology',
+        skills: ['data', 'research'],
+        stipend: '₹19,000',
+        duration: '6 months'
+      },
+      // Design Jobs
+      {
+        title: 'UI/UX Design Intern',
+        company: 'Creative Studio',
+        sector: 'marketing',
+        skills: ['design', 'communication'],
+        stipend: '₹14,000',
+        duration: '4 months'
+      },
+      {
+        title: 'Graphic Designer Intern',
+        company: 'Brand Builders',
+        sector: 'marketing',
+        skills: ['design', 'marketing'],
+        stipend: '₹12,000',
+        duration: '3 months'
+      },
+      // Marketing Jobs
+      {
+        title: 'Digital Marketing Intern',
+        company: 'Marketing Gurus',
+        sector: 'marketing',
+        skills: ['marketing', 'communication'],
+        stipend: '₹13,000',
+        duration: '4 months'
+      },
+      {
+        title: 'Content Marketing Intern',
+        company: 'Content Creators Inc',
+        sector: 'marketing',
+        skills: ['marketing', 'writing'],
+        stipend: '₹11,000',
+        duration: '3 months'
+      }
+    ];
+
+    // Filter jobs based on user's skills and sector
+    const matchingJobs = jobDatabase.filter(job => {
+      const skillMatch = job.skills.some(skill => formData.skills.includes(skill));
+      const sectorMatch = job.sector === formData.sector;
+      return skillMatch || sectorMatch;
+    });
+
+    // Get location info
+    const locationInfo = getLocationInfo(formData.state, formData.district);
+
+    // Sort by relevance and take top 3-5
+    const recommendations = matchingJobs.slice(0, 5).map((job, index) => {
+      const skillOverlap = job.skills.filter(skill => formData.skills.includes(skill)).length;
+      const match = Math.min(95, 70 + (skillOverlap * 10) + Math.floor(Math.random() * 15));
+      
+      return {
+        id: index + 1,
+        ...job,
+        location: locationInfo.city,
+        match: match,
+        skills: job.skills.map(skill => skillOptions.find(s => s.id === skill)?.label || skill)
+      };
+    });
+
+    return recommendations;
+  };
+
+  const getLocationInfo = (state: string, district: string) => {
+    const locationMap = {
+      'Gujarat': { 
+        'Ahmedabad': { city: 'Ahmedabad' },
+        'Surat': { city: 'Surat' },
+        'Vadodara': { city: 'Vadodara' }
+      },
+      'Karnataka': {
+        'Bengaluru Urban': { city: 'Bengaluru' },
+        'Mysuru': { city: 'Mysuru' }
+      },
+      'Maharashtra': {
+        'Mumbai': { city: 'Mumbai' },
+        'Pune': { city: 'Pune' }
+      }
+    };
+
+    return locationMap[state]?.[district] || { city: district || 'Your City' };
+  };
+
   const handleSubmit = () => {
-    // Simulate form submission and navigate to results
+    const recommendations = generateRecommendations(formData);
     navigate('/recommendations', { 
       state: { 
         formData,
-        recommendations: [
-          {
-            id: 1,
-            title: 'Software Development Intern',
-            company: 'Tech Solutions Pvt Ltd',
-            location: 'Bengaluru',
-            distance: '5 km',
-            stipend: '₹15,000',
-            match: 95,
-            skills: ['Programming', 'Communication'],
-            duration: '6 months'
-          },
-          {
-            id: 2,
-            title: 'Data Analyst Intern',
-            company: 'Analytics Corp',
-            location: 'Bengaluru',
-            distance: '8 km',
-            stipend: '₹12,000',
-            match: 88,
-            skills: ['Data Analysis', 'Communication'],
-            duration: '4 months'
-          },
-          {
-            id: 3,
-            title: 'Product Manager Trainee',
-            company: 'StartupXY',
-            location: 'Bengaluru',
-            distance: '12 km',
-            stipend: '₹18,000',
-            match: 82,
-            skills: ['Leadership', 'Communication'],
-            duration: '6 months'
-          }
-        ]
+        recommendations
       }
     });
   };
@@ -323,11 +450,53 @@ export const InternshipForm = ({ onBack }: InternshipFormProps) => {
                       <SelectValue placeholder="Select your district" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Bengaluru Urban">Bengaluru Urban</SelectItem>
-                      <SelectItem value="Bengaluru Rural">Bengaluru Rural</SelectItem>
-                      <SelectItem value="Mysuru">Mysuru</SelectItem>
-                      <SelectItem value="Mangaluru">Mangaluru</SelectItem>
-                      <SelectItem value="Hubli">Hubli</SelectItem>
+                      {formData.state === 'Gujarat' && (
+                        <>
+                          <SelectItem value="Ahmedabad">Ahmedabad</SelectItem>
+                          <SelectItem value="Surat">Surat</SelectItem>
+                          <SelectItem value="Vadodara">Vadodara</SelectItem>
+                          <SelectItem value="Rajkot">Rajkot</SelectItem>
+                          <SelectItem value="Gandhinagar">Gandhinagar</SelectItem>
+                        </>
+                      )}
+                      {formData.state === 'Karnataka' && (
+                        <>
+                          <SelectItem value="Bengaluru Urban">Bengaluru Urban</SelectItem>
+                          <SelectItem value="Bengaluru Rural">Bengaluru Rural</SelectItem>
+                          <SelectItem value="Mysuru">Mysuru</SelectItem>
+                          <SelectItem value="Mangaluru">Mangaluru</SelectItem>
+                          <SelectItem value="Hubli">Hubli</SelectItem>
+                        </>
+                      )}
+                      {formData.state === 'Maharashtra' && (
+                        <>
+                          <SelectItem value="Mumbai">Mumbai</SelectItem>
+                          <SelectItem value="Pune">Pune</SelectItem>
+                          <SelectItem value="Nagpur">Nagpur</SelectItem>
+                          <SelectItem value="Nashik">Nashik</SelectItem>
+                          <SelectItem value="Aurangabad">Aurangabad</SelectItem>
+                        </>
+                      )}
+                      {formData.state === 'Tamil Nadu' && (
+                        <>
+                          <SelectItem value="Chennai">Chennai</SelectItem>
+                          <SelectItem value="Coimbatore">Coimbatore</SelectItem>
+                          <SelectItem value="Madurai">Madurai</SelectItem>
+                          <SelectItem value="Salem">Salem</SelectItem>
+                          <SelectItem value="Tiruchirappalli">Tiruchirappalli</SelectItem>
+                        </>
+                      )}
+                      {formData.state === 'Delhi' && (
+                        <>
+                          <SelectItem value="New Delhi">New Delhi</SelectItem>
+                          <SelectItem value="Central Delhi">Central Delhi</SelectItem>
+                          <SelectItem value="North Delhi">North Delhi</SelectItem>
+                          <SelectItem value="South Delhi">South Delhi</SelectItem>
+                        </>
+                      )}
+                      {!['Gujarat', 'Karnataka', 'Maharashtra', 'Tamil Nadu', 'Delhi'].includes(formData.state) && (
+                        <SelectItem value="Select District">Select your district</SelectItem>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>

@@ -122,12 +122,12 @@ const Recommendations = () => {
               </CardHeader>
 
               <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                   <div className="flex items-center gap-2 text-sm">
                     <MapPin className="w-4 h-4 text-muted-foreground" />
                     <div>
                       <div className="font-medium">{rec.location}</div>
-                      <div className="text-muted-foreground">{rec.distance}</div>
+                      <div className="text-muted-foreground">Local area</div>
                     </div>
                   </div>
                   
@@ -144,14 +144,6 @@ const Recommendations = () => {
                     <div>
                       <div className="font-medium">{rec.duration}</div>
                       <div className="text-muted-foreground">duration</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 text-sm">
-                    <Star className="w-4 h-4 text-muted-foreground" />
-                    <div>
-                      <div className="font-medium">Match Score</div>
-                      <div className="text-muted-foreground">{rec.match}%</div>
                     </div>
                   </div>
                 </div>
@@ -184,10 +176,6 @@ const Recommendations = () => {
                         Apply Now
                       </>
                     )}
-                  </Button>
-                  
-                  <Button variant="outline" className="touch-target">
-                    Learn More
                   </Button>
                 </div>
               </CardContent>

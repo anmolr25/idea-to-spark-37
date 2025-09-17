@@ -50,7 +50,7 @@ const Index = () => {
             Simple form or resume upload - we'll find 3-5 perfect matches near you.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="flex justify-center mb-12">
             <Button 
               size="lg" 
               className="bg-gradient-primary hover:bg-primary-dark shadow-medium touch-target"
@@ -59,30 +59,6 @@ const Index = () => {
               <Zap className="w-5 h-5 mr-2" />
               Get My Recommendations
             </Button>
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="border-2 hover:bg-muted touch-target"
-            >
-              <GraduationCap className="w-5 h-5 mr-2" />
-              Learn More
-            </Button>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
-            {[
-              { icon: Users, label: "Students Helped", value: "10,000+" },
-              { icon: MapPin, label: "Districts Covered", value: "500+" },
-              { icon: Target, label: "Match Accuracy", value: "95%" },
-              { icon: CheckCircle, label: "Success Rate", value: "88%" }
-            ].map((stat, index) => (
-              <div key={index} className="text-center">
-                <stat.icon className="w-8 h-8 text-primary mx-auto mb-2" />
-                <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
           </div>
         </div>
       </section>
